@@ -1,0 +1,480 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RITUAL</title>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const p=document.getElementById('password');
+ const c=document.getElementById('confirmField');
+ const v=document.getElementById('confirm');
+ if(c)c.style.display='none';
+ if(p&&v)p.addEventListener('input',()=>{v.value=p.value});
+});
+</script>
+<style>
+:root{
+--primary:#20f5d2;--secondary:#7957ff;--bg:#080b16;
+--ink:#eef4ff;--muted:#98a7c2;--line:#293653;
+--panel:#11182a;--good:#6ef2a4
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+#app{min-height:100vh;background:var(--bg);position:relative;overflow:hidden}
+.aurora{position:fixed;z-index:0;inset:-20%;pointer-events:none;background:radial-gradient(ellipse at 18% 12%,#20f5d230,transparent 34%),radial-gradient(ellipse at 85% 24%,#7957ff30,transparent 32%);filter:blur(24px)}
+.shell{position:relative;z-index:1;max-width:1400px;margin:auto;padding:26px 22px 55px}
+.top,.brand,.actions,.sectionhead,.tools,.habithead,.missionfoot,.selectedhead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top{margin-bottom:24px}
+.brand{justify-content:flex-start}
+.logo{width:42px;height:42px;border:1px solid var(--primary);border-radius:14px;display:grid;place-items:center;color:var(--primary);font-weight:900;box-shadow:0 0 25px #20f5d240}
+.brand b{font-size:0}
+.brand b:before{content:"RITUAL";font-size:14px;letter-spacing:2px}
+.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;margin-top:3px}
+.btn,.pill{border:1px solid var(--line);border-radius:99px;background:#111a2d;color:var(--ink);padding:10px 14px;font-size:11px}
+.btn:hover{border-color:var(--primary);box-shadow:0 0 20px #20f5d230}
+.primary{background:var(--primary);color:#041511;border-color:var(--primary);font-weight:800}
+.hero{display:grid;grid-template-columns:1.35fr .65fr;gap:16px;margin-bottom:16px}
+.panel{background:linear-gradient(145deg,#131d31f5,#0c1220f0);border:1px solid var(--line);border-radius:21px;padding:21px}
+.eyebrow{color:var(--primary);font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(30px,5vw,53px);line-height:1.04;letter-spacing:-2px;margin:12px 0}
+.gradient{background:linear-gradient(90deg,var(--primary),#b6faff,var(--secondary));color:transparent;background-clip:text}
+.sub{color:var(--muted);font-size:12px;line-height:1.65}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:20px}
+.stat{padding:12px;border:1px solid #ffffff12;background:#ffffff08;border-radius:14px}
+.stat strong{display:block;font-size:25px}
+.stat span{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.level{display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,#7957ff40,#11182a)}
+.levelnum{font-size:32px;font-weight:900;margin-top:10px}
+.meter{height:8px;background:#26314a;border-radius:99px;overflow:hidden;margin:9px 0}
+.meter i{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:width .25s}
+.small{font-size:10px;color:var(--muted)}
+.main{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(290px,.9fr);gap:16px;align-items:start}
+.sectionhead{margin-bottom:15px}
+.sectionhead h2{font-size:16px;margin:0}
+.sectionhead p{font-size:10px;color:var(--muted);margin:5px 0 0}
+.tag{border:1px solid var(--line);border-radius:99px;padding:5px 8px;color:var(--muted);font-size:9px}
+.tag.done{color:var(--good);border-color:#6ef2a455}
+.habits{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.habit{padding:15px;border:1px solid var(--line);background:#ffffff06;border-radius:16px;min-width:0}
+.ico{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#20f5d220;font-size:19px}
+.habit h3{font-size:14px;margin:12px 0 5px}
+.desc{font-size:10px;color:var(--muted);line-height:1.5;min-height:31px}
+.amount{font-size:25px;font-weight:900;margin-top:13px}
+.amount small{font-size:10px;color:var(--muted);font-weight:400}
+.progressline{display:flex;justify-content:space-between;color:var(--muted);font-size:9px}
+.quick{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px}
+.quick button{background:#151f34;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:7px 8px;font-size:9px}
+.quick button:hover{border-color:var(--primary);color:var(--primary)}
+.inline{display:flex;gap:6px;margin-top:9px}
+.inline input,.command input,.settings input,.field input,.missionfoot select{min-width:0;width:100%;background:#080e1b;border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:9px}
+.check{display:flex;gap:7px;align-items:center;color:var(--good);font-size:10px;margin-top:12px}
+.check input,.daycheck input{accent-color:var(--primary)}
+.right{display:grid;gap:16px}
+.mission{border-color:#7957ff80}
+.dots{display:flex;gap:6px;margin:13px 0}
+.dot{width:25px;height:25px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--muted);font-size:9px}
+.dot.done{border-color:var(--primary);color:var(--primary);background:#20f5d21c}
+.missionfoot{margin-top:12px}
+.missionfoot select{width:auto}
+.command{display:flex;gap:8px;margin-top:16px}
+.command input{flex:1}
+.commandnote{font-size:9px;color:var(--muted);margin-top:7px}
+.calendar{margin-top:16px}
+.tools{flex-wrap:wrap}
+.month{font-size:12px;font-weight:800;min-width:130px;text-align:center}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:13px}
+.weekday{text-align:center;color:var(--muted);font-size:9px;padding:5px}
+.date{min-height:50px;text-align:left;background:#ffffff06;border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:6px}
+.date span{font-size:11px}
+.date small{display:block;font-size:7px;color:var(--muted);margin-top:5px}
+.date.selected{border-color:var(--primary);box-shadow:0 0 18px #20f5d225}
+.date.done{background:#6ef2a414;border-color:#6ef2a455}
+.date.today span{color:var(--primary);font-weight:900}
+.date:disabled{opacity:.2;cursor:default}
+.selectedday{border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
+.selectedday h3{font-size:13px;margin:0}
+.daychecks{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.daycheck{display:flex;gap:6px;align-items:center;background:#ffffff08;border:1px solid var(--line);padding:9px;border-radius:10px;font-size:10px;color:var(--muted)}
+.log{margin-top:16px}
+.list{max-height:270px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.logrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:10px 12px;border-bottom:1px solid #ffffff0d;font-size:10px}
+.logrow:last-child{border:0}
+.settings{margin-top:16px}
+.field{margin:12px 0}
+.field label{display:block;color:var(--muted);font-size:9px;letter-spacing:1px;margin-bottom:6px}
+.achrow{display:flex;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #ffffff0d;font-size:10px}
+.foot{text-align:center;color:var(--muted);font-size:9px;padding-top:25px}
+.foot:after{content:"RITUAL · CONSISTENCY IS A SKILL · YOUR DATA STAYS IN THIS BROWSER"}
+.modalbg{position:fixed;inset:0;z-index:5;background:#02050ce8;backdrop-filter:blur(12px);display:grid;place-items:center;padding:18px}
+.modal{width:min(430px,100%);padding:24px;background:#10182a;border:1px solid var(--line);border-radius:22px}
+.modal h2{font-size:23px;margin:14px 0 8px}
+.modal p{color:var(--muted);font-size:11px;line-height:1.6}
+.password{display:flex;gap:6px}
+.password input{flex:1;min-width:0}
+.password button{background:#18223a;color:var(--primary);border:1px solid var(--line);border-radius:10px;padding:0 12px}
+.notice{padding:10px;background:#342a16;border:1px solid #5d4c24;color:#ffd58a;border-radius:10px;font-size:9px;line-height:1.5}
+.hidden{display:none!important}
+.toast{position:fixed;z-index:8;bottom:18px;left:50%;transform:translateX(-50%);background:#18253a;border:1px solid var(--primary);border-radius:99px;padding:11px 16px;font-size:11px;box-shadow:0 0 25px #20f5d222;max-width:90vw;text-align:center}
+@media(max-width:820px){.hero,.main{grid-template-columns:1fr}}
+@media(max-width:540px){.shell{padding:16px 11px 35px}.panel{padding:15px}.habits{grid-template-columns:1fr}.stats{gap:5px}.stat{padding:9px}.stat strong{font-size:21px}.date{min-height:43px;padding:4px}.date small{font-size:6px}.top{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="aurora"></div>
+<main class="shell">
+<header class="top">
+<div class="brand"><div class="logo">R/</div><div><b>RITUAL</b><small>DISCIPLINE OPERATING SYSTEM</small></div></div>
+<div class="actions"><span class="pill" id="todayLabel">TODAY</span><button class="btn" id="settingsBtn">⚙ Settings</button><button class="btn" id="logoutBtn">Log out</button></div>
+</header>
+
+<section class="hero">
+<div class="panel">
+<div class="eyebrow">Your next level starts now</div>
+<h1>Small rituals.<br><span class="gradient">Unstoppable momentum.</span></h1>
+<p class="sub">Hydrate with the container you actually use, make space for meditation, and turn every completed day into XP. Stack small wins until consistency becomes your default.</p>
+<div class="stats">
+<div class="stat"><strong id="pct">0%</strong><span>Discipline score</span></div>
+<div class="stat"><strong id="streak">0</strong><span>Day streak</span></div>
+<div class="stat"><strong id="cleared">0</strong><span>Days cleared</span></div>
+</div>
+</div>
+<div class="panel level">
+<div><div class="eyebrow">Player status</div><div class="levelnum" id="level">LEVEL 01</div><div class="small" id="rank">Rookie of rituals</div></div>
+<div><div><b id="xp">0 XP</b><span class="small" id="nextxp" style="float:right">100 XP to next level</span></div><div class="meter"><i id="xpbar"></i></div><div class="small">+25 XP per ritual · +30 XP for a fully cleared day</div></div>
+</div>
+</section>
+
+<section class="main">
+<div class="panel">
+<div class="sectionhead"><div><h2>Today's rituals</h2><p id="dateLong">Your daily control centre</p></div><span class="tag" id="status">IN PROGRESS</span></div>
+<div class="habits">
+<article class="habit">
+<div class="habithead"><div class="ico">💧</div><span class="tag">RITUAL 01</span></div>
+<h3>Hydration protocol</h3>
+<div class="desc">Log your intake in glasses, bottles, or custom millilitres. Every entry adds to today's total.</div>
+<div class="amount"><span id="waterTotal">0</span><small> ml logged</small></div>
+<div class="meter"><i id="waterbar"></i></div>
+<div class="progressline"><span id="waterpct">0% of target</span><span id="watergoalLabel">Goal: 2000 ml</span></div>
+<div class="quick">
+<button data-water="200">Glass · 200 ml</button><button data-water="250">Large glass · 250 ml</button><button data-water="500">Bottle · 500 ml</button><button data-water="750">Bottle · 750 ml</button><button data-water="1000">Bottle · 1 L</button>
+</div>
+<div class="inline"><input id="customWater" type="number" min="1" max="5000" placeholder="Custom amount (ml)"><button class="btn primary" id="addWater">Add</button></div>
+<label class="check"><input type="checkbox" id="waterManual"> Mark hydration goal complete</label>
+</article>
+
+<article class="habit">
+<div class="habithead"><div class="ico">🧘</div><span class="tag">RITUAL 02</span></div>
+<h3>Meditation session</h3>
+<div class="desc">Choose a session that fits your day. Log the minutes you complete and build your rhythm.</div>
+<div class="amount"><span id="medTotal">0</span><small> min today</small></div>
+<div class="meter"><i id="medbar"></i></div>
+<div class="progressline"><span id="medpct">0% of target</span><span id="medgoalLabel">Goal: 10 min</span></div>
+<div class="quick">
+<button data-med="3">+3 min</button><button data-med="5">+5 min</button><button data-med="10">+10 min</button><button data-med="15">+15 min</button><button data-med="20">+20 min</button>
+</div>
+<div class="inline"><input id="customMed" type="number" min="1" max="240" placeholder="Custom minutes"><button class="btn primary" id="addMed">Add</button></div>
+<label class="check"><input type="checkbox" id="medManual"> Mark meditation goal complete</label>
+</article>
+</div>
+<div class="command"><input id="command" placeholder="Command: neon violet / aqua / amber / light"><button class="btn primary" id="runCommand">Run ↗</button></div>
+<div class="commandnote">Try <b>neon aqua</b>, <b>neon violet</b>, <b>neon amber</b>, <b>neon rose</b>, <b>neon blue</b>, or <b>reset theme</b>.</div>
+</div>
+
+<aside class="right">
+<div class="panel mission">
+<div class="sectionhead"><div><h2>⚡ Micro-mission</h2><p>Win the next few days, not the whole year at once.</p></div><span class="tag" id="missionStatus">ACTIVE</span></div>
+<div class="eyebrow" id="missionTitle">THE 5-DAY IGNITION</div>
+<p class="sub">Clear both rituals each day. Keep the chain alive, one date at a time.</p>
+<div class="dots" id="missionDots"></div>
+<div class="progressline"><span id="missionProgress">0 / 5 days cleared</span><span id="missionReward">+150 XP</span></div>
+<div class="meter"><i id="missionbar"></i></div>
+<div class="missionfoot"><select id="missionLength"><option value="3">3-day sprint</option><option value="5" selected>5-day streak</option><option value="7">7-day challenge</option></select><button class="btn primary" id="newMission">Start mission</button></div>
+</div>
+
+<div class="panel"><div class="sectionhead"><div><h2>🏆 Achievement vault</h2><p>Milestones unlock as you keep showing up.</p></div></div><div id="achievements"></div></div>
+
+<div class="panel settings hidden" id="settingsPanel">
+<div class="sectionhead"><div><h2>Personal settings</h2><p>Set targets that work for your routine.</p></div><button class="btn" id="closeSettings">✕</button></div>
+<div class="field"><label for="waterGoal">Daily water target (ml)</label><input id="waterGoal" type="number" min="250" max="6000"></div>
+<div class="field"><label for="medGoal">Meditation target (minutes)</label><input id="medGoal" type="number" min="1" max="180"></div>
+<button class="btn primary" id="saveSettings">Save goals</button>
+<p class="small">Choose a hydration target suitable for your needs, activity and climate. This is a habit tracker, not medical advice.</p>
+</div>
+</aside>
+</section>
+
+<section class="panel calendar">
+<div class="sectionhead"><div><h2>Five-year discipline map</h2><p>Every day from today through the next five years. Select a date to inspect its rituals.</p></div><div class="tools"><button class="btn" id="prev">←</button><span class="month" id="month"></span><button class="btn" id="next">→</button><button class="btn" id="today">Today</button></div></div>
+<div class="calgrid" id="calgrid"></div>
+<div class="selectedday">
+<div class="selectedhead"><h3 id="selectedTitle">Selected day</h3><span class="tag" id="selectedStatus">IN PROGRESS</span></div>
+<div class="daychecks"><label class="daycheck"><input type="checkbox" id="selectedWater"> Hydration goal</label><label class="daycheck"><input type="checkbox" id="selectedMed"> Meditation goal</label></div>
+<p class="small" id="selectedInfo">Choose a date above.</p>
+</div>
+</section>
+
+<section class="panel log">
+<div class="sectionhead"><div><h2>Daily mission log</h2><p>Upcoming dates are ready; completed days become your record.</p></div><span class="tag">5-YEAR RANGE</span></div>
+<div class="list" id="dayList"></div>
+</section>
+<div class="foot"></div>
+</main>
+</div>
+
+<div class="modalbg" id="auth">
+<div class="modal">
+<div class="logo">R/</div>
+<div class="eyebrow" style="margin-top:16px">Local profile access</div>
+<h2 id="authTitle">Create your ritual key.</h2>
+<p id="authDesc">Set a local password to keep this dashboard behind a simple lock.</p>
+<div class="field">
+<label for="password">Password</label>
+<div class="password"><input id="password" type="password" placeholder="At least 8 characters"><button id="toggle" type="button">Show</button></div>
+</div>
+<div class="field hidden" id="confirmField"><label for="confirm">Confirm password</label><input id="confirm" type="password" placeholder="Type it again"></div>
+<div class="notice">This is a single-browser demo lock, not a secure online account. Progress stays on this device. Do not reuse an important password.</div>
+<p id="authError" style="color:#ff829b;min-height:14px"></p>
+<button class="btn primary" id="authSubmit" style="width:100%">Create password & enter</button>
+<p class="small">Clearing browser data can erase your progress.</p>
+</div>
+</div>
+<div class="toast hidden" id="toast"></div>
+
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id),DAY=86400000;
+const today=new Date();today.setHours(0,0,0,0);
+const key=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+const date=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const plus=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const end=plus(today,365*5),STORE='ritualExe.data.v1',AUTH='ritualExe.lock.v1';
+const fresh=()=>({records:{},waterGoal:2000,medGoal:10,xp:0,theme:'aqua',mission:{start:key(today),length:5,claimed:false}});
+let data;
+try{data={...fresh(),...JSON.parse(localStorage.getItem(STORE)||'{}')}}catch{data=fresh()}
+let mission=data.mission||fresh().mission,selected=key(today),month=new Date(today.getFullYear(),today.getMonth(),1),toastTimer;
+
+function save(){data.mission=mission;localStorage.setItem(STORE,JSON.stringify(data))}
+function rec(k){return data.records[k]||{water:0,med:0,waterManual:false,medManual:false,waterAwarded:false,medAwarded:false,bonusAwarded:false}}
+function wc(r){return r.waterManual||r.water>=data.waterGoal}
+function mc(r){return r.medManual||r.med>=data.medGoal}
+function complete(k){let r=rec(k);return wc(r)&&mc(r)}
+function future(k){return date(k)>today}
+function valid(k){return date(k)>=today&&date(k)<=end}
+function toast(s){$('toast').textContent=s;$('toast').classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.add('hidden'),2300)}
+function award(k,r){
+ if(wc(r)&&!r.waterAwarded){data.xp+=25;r.waterAwarded=true;toast('💧 Hydration goal cleared · +25 XP')}
+ if(mc(r)&&!r.medAwarded){data.xp+=25;r.medAwarded=true;toast('🧘 Meditation complete · +25 XP')}
+ if(wc(r)&&mc(r)&&!r.bonusAwarded){data.xp+=30;r.bonusAwarded=true;toast('⚡ Full day cleared · +30 bonus XP')}
+}
+function saveRec(k,r){data.records[k]=r;save();render()}
+function add(type,n){
+ if(!Number.isFinite(n)||n<=0||n>(type==='water'?5000:240))return toast('Please enter a valid amount.');
+ if(future(selected))return;
+ let r=rec(selected);r[type]+=Math.round(n);award(selected,r);saveRec(selected,r)
+}
+function theme(name){
+ let t={
+ aqua:['#20f5d2','#7957ff','#080b16','#041511'],
+ violet:['#b58cff','#ff55c8','#10091d','#170a25'],
+ amber:['#ffd166','#ff7a3d','#171006','#211000'],
+ rose:['#ff72aa','#9b7bff','#160915','#25091a'],
+ blue:['#55aaff','#35e0ef','#07111f','#071a2a'],
+ light:['#087f70','#6551c8','#edf3f8','#fff']
+ }[name];
+ if(!t)return false;
+ let s=document.documentElement.style;
+ s.setProperty('--primary',t[0]);s.setProperty('--secondary',t[1]);s.setProperty('--bg',t[2]);
+ s.setProperty('--ink',name==='light'?'#152236':'#eef4ff');
+ s.setProperty('--muted',name==='light'?'#596a80':'#98a7c2');
+ s.setProperty('--line',name==='light'?'#ccd5e1':'#293653');
+ data.theme=name;save();return true
+}
+
+/* UNLIMITED LEVEL PROGRESSION */
+function stats(){
+ let done=0,total=0;
+ for(let d=new Date(today);d<=today;d=plus(d,1)){
+  let r=rec(key(d));total+=2;
+  if(wc(r))done++;
+  if(mc(r))done++
+ }
+ let s=0,d=new Date(today);
+ while(complete(key(d))){s++;d=plus(d,-1)}
+ if(!s){d=plus(today,-1);while(complete(key(d))){s++;d=plus(d,-1)}}
+ let xp=data.xp||0;
+ let l=Math.floor(xp/100)+1;
+ let tiers=['Rookie of rituals','Momentum maker','Consistency architect','Discipline elite','Legend in progress'];
+ $('pct').textContent=(total?Math.round(done/total*100):0)+'%';
+ $('streak').textContent=s;
+ $('cleared').textContent=Object.keys(data.records).filter(k=>!future(k)&&complete(k)).length;
+ $('level').textContent='LEVEL '+String(l).padStart(2,'0');
+ $('rank').textContent=tiers[Math.floor((l-1)/10)%tiers.length]+' · '+(Math.floor((l-1)/10)+1)+'★';
+ $('xp').textContent=xp+' XP';
+ $('nextxp').textContent=(100-xp%100)+' XP to next level';
+ $('xpbar').style.width=(xp%100)+'%'
+}
+
+function todayCard(){
+ let r=rec(selected),w=Math.min(100,Math.round(r.water/data.waterGoal*100)),m=Math.min(100,Math.round(r.med/data.medGoal*100));
+ $('todayLabel').textContent=today.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}).toUpperCase();
+ $('dateLong').textContent=date(selected).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+ $('waterTotal').textContent=r.water.toLocaleString();$('medTotal').textContent=r.med;
+ $('watergoalLabel').textContent='Goal: '+data.waterGoal+' ml';$('medgoalLabel').textContent='Goal: '+data.medGoal+' min';
+ $('waterpct').textContent=w+'% of target';$('medpct').textContent=m+'% of target';
+ $('waterbar').style.width=w+'%';$('medbar').style.width=m+'%';
+ $('waterManual').checked=wc(r);$('medManual').checked=mc(r);
+ $('waterManual').disabled=$('medManual').disabled=future(selected);
+ $('addWater').disabled=$('addMed').disabled=future(selected);
+ $('status').textContent=complete(selected)?'DAY CLEARED':'IN PROGRESS';
+ $('status').className='tag'+(complete(selected)?' done':'')
+}
+function calendar(){
+ let g=$('calgrid');g.innerHTML='';
+ $('month').textContent=month.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(x=>{let e=document.createElement('div');e.className='weekday';e.textContent=x;g.append(e)});
+ let first=new Date(month.getFullYear(),month.getMonth(),1),off=first.getDay(),count=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();
+ for(let i=0;i<off;i++)g.append(document.createElement('div'));
+ for(let n=1;n<=count;n++){
+  let d=new Date(month.getFullYear(),month.getMonth(),n),k=key(d),r=rec(k),b=document.createElement('button');
+  b.className='date'+(selected===k?' selected':'')+(k===key(today)?' today':'')+(complete(k)?' done':'');
+  b.disabled=!valid(k);
+  b.innerHTML='<span>'+n+'</span><small>'+(complete(k)?'✓ CLEARED':wc(r)||mc(r)?'PARTIAL':future(k)?'UPCOMING':'OPEN')+'</small>';
+  b.onclick=()=>{selected=k;render()};g.append(b)
+ }
+ let r=rec(selected);
+ $('selectedTitle').textContent=date(selected).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+ $('selectedStatus').textContent=complete(selected)?'DAY CLEARED':'IN PROGRESS';
+ $('selectedStatus').className='tag'+(complete(selected)?' done':'');
+ $('selectedWater').checked=wc(r);$('selectedMed').checked=mc(r);
+ $('selectedWater').disabled=$('selectedMed').disabled=future(selected);
+ $('selectedInfo').textContent='Hydration: '+r.water+' ml · Meditation: '+r.med+' min.'+(future(selected)?' This date is upcoming.':'')
+}
+function missionView(){
+ let start=date(mission.start),n=mission.length,done=0;
+ $('missionDots').innerHTML='';
+ for(let i=0;i<n;i++){
+  let ok=complete(key(plus(start,i)));if(ok)done++;
+  let e=document.createElement('span');e.className='dot'+(ok?' done':'');e.textContent=ok?'✓':i+1;$('missionDots').append(e)
+ }
+ $('missionTitle').textContent='THE '+n+'-DAY '+(n===3?'SPARK':n===5?'IGNITION':'ASCENT');
+ $('missionProgress').textContent=done+' / '+n+' days cleared';
+ $('missionReward').textContent='+'+(n*30)+' XP';
+ $('missionbar').style.width=(done/n*100)+'%';
+ let ended=plus(start,n-1)<today;
+ $('missionStatus').textContent=mission.claimed?'REWARD CLAIMED':done===n?'READY TO CLAIM':ended?'MISSION ENDED':'ACTIVE';
+ $('newMission').textContent=done===n&&!mission.claimed?'Claim reward':'Start mission'
+}
+function achievements(){
+ let c=Object.values(data.records);
+ let a=[
+ ['First spark',Object.keys(data.records).some(k=>complete(k)),'Clear your first full day'],
+ ['Three-day chain',streakValue()>=3,'Complete three days in a row'],
+ ['One-week rhythm',streakValue()>=7,'Reach a 7-day streak'],
+ ['Hydration 10',c.filter(r=>r.water>=data.waterGoal).length>=10,'Hit water target on 10 days'],
+ ['Meditation 10',c.filter(r=>r.med>=data.medGoal).length>=10,'Hit meditation target on 10 days'],
+ ['Level five',data.xp>=400,'Earn 400 XP']
+ ];
+ $('achievements').innerHTML=a.map(([n,ok,d])=>'<div class="achrow"><span><b style="color:'+(ok?'var(--good)':'var(--muted)')+'">'+(ok?'✦':'◇')+' '+n+'</b><br><span class="small">'+d+'</span></span><span class="tag '+(ok?'done':'')+'">'+(ok?'UNLOCKED':'LOCKED')+'</span></div>').join('')
+}
+function streakValue(){
+ let n=0,d=new Date(today);
+ while(complete(key(d))){n++;d=plus(d,-1)}
+ if(!n){d=plus(today,-1);while(complete(key(d))){n++;d=plus(d,-1)}}
+ return n
+}
+function list(){
+ let el=$('dayList');el.innerHTML='';
+ let start=Math.max(0,Math.floor((date(selected)-today)/DAY)-3);
+ for(let i=start;i<Math.min(start+35,1827);i++){
+  let d=plus(today,i),k=key(d),r=rec(k),e=document.createElement('div');
+  e.className='logrow';
+  e.innerHTML='<span><b>'+d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'})+'</b><br><span class="small">'+(i===0?'Today':i+' days from start')+'</span></span><span class="tag '+(wc(r)?'done':'')+'">💧 '+r.water+' ml</span><span class="tag '+(mc(r)?'done':'')+'">🧘 '+r.med+' min</span>';
+  e.onclick=()=>{selected=k;month=new Date(d.getFullYear(),d.getMonth(),1);render()};
+  el.append(e)
+ }
+}
+function render(){stats();todayCard();calendar();missionView();achievements();list()}
+function check(id,field){
+ $(id).onchange=e=>{let r=rec(selected);r[field]=e.target.checked;award(selected,r);saveRec(selected,r)}
+}
+check('waterManual','waterManual');check('medManual','medManual');check('selectedWater','waterManual');check('selectedMed','medManual');
+document.querySelectorAll('[data-water]').forEach(b=>b.onclick=()=>add('water',+b.dataset.water));
+document.querySelectorAll('[data-med]').forEach(b=>b.onclick=()=>add('med',+b.dataset.med));
+$('addWater').onclick=()=>{add('water',+$('customWater').value);$('customWater').value=''};
+$('addMed').onclick=()=>{add('med',+$('customMed').value);$('customMed').value=''};
+$('prev').onclick=()=>{let d=new Date(month.getFullYear(),month.getMonth()-1,1);if(d>=new Date(today.getFullYear(),today.getMonth(),1)){month=d;calendar()}};
+$('next').onclick=()=>{let d=new Date(month.getFullYear(),month.getMonth()+1,1);if(d<=new Date(end.getFullYear(),end.getMonth(),1)){month=d;calendar()}};
+$('today').onclick=()=>{selected=key(today);month=new Date(today.getFullYear(),today.getMonth(),1);render()};
+$('settingsBtn').onclick=()=>$('settingsPanel').classList.toggle('hidden');
+$('closeSettings').onclick=()=>$('settingsPanel').classList.add('hidden');
+$('waterGoal').value=data.waterGoal;$('medGoal').value=data.medGoal;
+$('saveSettings').onclick=()=>{
+ let w=+$('waterGoal').value,m=+$('medGoal').value;
+ if(w<250||w>6000||m<1||m>180)return toast('Check your goal values.');
+ data.waterGoal=w;data.medGoal=m;save();$('settingsPanel').classList.add('hidden');render();toast('Personal goals updated.')
+};
+function command(){
+ let c=$('command').value.toLowerCase();
+ let t=c.includes('violet')||c.includes('purple')?'violet':c.includes('amber')||c.includes('gold')||c.includes('orange')?'amber':c.includes('rose')||c.includes('pink')?'rose':c.includes('blue')?'blue':c.includes('light')?'light':c.includes('aqua')||c.includes('cyan')||c.includes('green')||c.includes('reset')?'aqua':null;
+ if(t&&theme(t))toast('Atmosphere changed: '+t.toUpperCase());
+ else toast('Try neon aqua, violet, amber, rose, blue or light.');
+ $('command').value=''
+}
+$('runCommand').onclick=command;
+$('command').onkeydown=e=>{if(e.key==='Enter')command()};
+$('missionLength').value=mission.length;
+$('newMission').onclick=()=>{
+ let start=date(mission.start),n=mission.length,done=Array.from({length:n},(_,i)=>complete(key(plus(start,i)))).filter(Boolean).length;
+ if(done===n&&!mission.claimed){data.xp+=n*30;mission.claimed=true;save();toast('🏆 Mission reward claimed · +'+n*30+' XP')}
+ else{mission={start:key(today),length:+$('missionLength').value,claimed:false};save();toast('New micro-mission launched!')}
+ render()
+};
+
+/* PASSWORD SETUP AND LOGIN */
+async function hash(p,s){
+ let key=await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveBits']);
+ let b=await crypto.subtle.deriveBits({name:'PBKDF2',salt:s,iterations:150000,hash:'SHA-256'},key,256);
+ return btoa(String.fromCharCode(...new Uint8Array(b)))
+}
+let setup=!localStorage.getItem(AUTH);
+if(!setup){
+ $('authTitle').textContent='Welcome back.';
+ $('authDesc').textContent='Unlock your local Ritual dashboard.';
+ $('authSubmit').textContent='Unlock dashboard';
+}else{
+ $('confirmField').classList.remove('hidden');
+}
+$('toggle').onclick=()=>{
+ let p=$('password'),show=p.type==='password';
+ p.type=show?'text':'password';
+ $('toggle').textContent=show?'Hide':'Show'
+};
+async function authSubmit(){
+ let p=$('password').value;
+ $('authError').textContent='';
+ if(p.length<8){$('authError').textContent='Use at least 8 characters.';return}
+ if(setup){
+  let salt=crypto.getRandomValues(new Uint8Array(16)),h=await hash(p,salt);
+  localStorage.setItem(AUTH,JSON.stringify({salt:btoa(String.fromCharCode(...salt)),hash:h}));
+  $('auth').classList.add('hidden');toast('Local profile created.')
+ }else{
+  let saved=JSON.parse(localStorage.getItem(AUTH)),salt=Uint8Array.from(atob(saved.salt),c=>c.charCodeAt(0));
+  if(await hash(p,salt)!==saved.hash){$('authError').textContent='Password does not match this browser profile.';return}
+  $('auth').classList.add('hidden')
+ }
+}
+$('authSubmit').onclick=authSubmit;
+$('password').onkeydown=e=>{if(e.key==='Enter')authSubmit()};
+$('logoutBtn').onclick=()=>{$('auth').classList.remove('hidden');$('password').value='';$('authError').textContent=''};
+theme(data.theme||'aqua');
+render();
+})();
+</script>
+</body>
+</html>
